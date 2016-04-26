@@ -2,10 +2,16 @@
     "name": "predicthq/address-formatter",
     "description": "Address formatter using country templates from https://github.com/OpenCageData/address-formatting",
     "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "PredictHQ",
             "homepage": "https://developer.predicthq.com"
+        },
+        {
+            "name": "Robert Kern",
+            "homepage": "http://www.robertkern.com",
+            "role": "Developer"
         }
     ],
     "require": {
@@ -19,6 +25,9 @@
     "autoload": {
         "psr-4": {
             "PredictHQ\\AddressFormatter\\": "src"
-        }
+        },
+        "exclude-from-classmap": [
+            "/tests/"
+        ]
     }
 }
