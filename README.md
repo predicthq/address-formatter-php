@@ -14,7 +14,7 @@ $ composer require predicthq/address-formatter
 
 ### Examples
 
-You can use either the `Adress` object or provide an array of address parts.
+You can use either the `Address` object or provide an array of address parts.
 
 ```php
 use PredictHQ\AddressFormatter\Address;
@@ -32,6 +32,14 @@ $a->setCity('Wellington')
 
 $text = $a->format();
 
+/**
+ * Will display as:
+ *
+ * 53 Pirie Street
+ * Mount Victoria
+ * Wellington 6011
+ * New Zealand
+ */
 echo $text;
 ```
 
@@ -52,6 +60,14 @@ $address = [
   'suburb' => 'Mount Victoria',
 ];
 
+/**
+ * Will display as:
+ *
+ * 53 Pirie Street
+ * Mount Victoria
+ * Wellington 6011
+ * New Zealand
+ */
 $f = new Formatter();
 $actual = $f->formatArray($address);
 ```
