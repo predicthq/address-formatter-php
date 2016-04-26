@@ -10,7 +10,7 @@ class Address
     private $house = '';
     private $road = '';
     private $village = '';
-    private $neighbourhood = '';
+    private $suburb = '';
     private $city = '';
     private $county = '';
     private $postcode = '';
@@ -57,9 +57,9 @@ class Address
         return $this;
     }
 
-    public function setNeighbourhood($val)
+    public function setSuburb($val)
     {
-        $this->neighbourhood = $val;
+        $this->suburb = $val;
 
         return $this;
     }
@@ -159,9 +159,9 @@ class Address
         return $this->village;
     }
 
-    public function getNeighbourhood()
+    public function getSuburb()
     {
-        return $this->neighbourhood;
+        return $this->suburb;
     }
 
     public function getCity()

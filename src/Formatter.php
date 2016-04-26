@@ -54,8 +54,8 @@ class Formatter
         if (strlen($address->getVillage()) > 0) {
             $addressArray['village'] = $address->getVillage();
         }
-        if (strlen($address->getNeighbourhood()) > 0) {
-            $addressArray['neighbourhood'] = $address->getNeighbourhood();
+        if (strlen($address->getSuburb()) > 0) {
+            $addressArray['suburb'] = $address->getSuburb();
         }
         if (strlen($address->getCity()) > 0) {
             $addressArray['city'] = $address->getCity();
