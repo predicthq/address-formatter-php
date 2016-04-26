@@ -1,6 +1,6 @@
 {
-    "name": "predicthq/php-address-formatter",
-    "description": "Address formatter for PHP using country templates from https://github.com/OpenCageData/address-formatting",
+    "name": "predicthq/address-formatter",
+    "description": "Address formatter using country templates from https://github.com/OpenCageData/address-formatting",
     "type": "library",
     "authors": [
         {
@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "php": ">=5.3.0",
+        "php": ">=5.4.0",
         "symfony/yaml": "~3.0",
         "mustache/mustache": "~2.0"
     },
