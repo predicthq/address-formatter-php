@@ -12,8 +12,10 @@ use Symfony\Component\Yaml\Yaml;
  * Currently using address templates version:
  * @link https://github.com/OpenCageData/address-formatting/commit/2cecd583ec6563c5d1372d5e16db9cbe4c26aa25
  *
- * Also inspired by the Perl address formatter using the same address templates:
+ * Also based on the Perl address formatter using the same address templates:
  * @link https://metacpan.org/pod/Geo::Address::Formatter
+ *
+ * Test cases come from the OpenCageData repo.
  */
 class Formatter
 {
@@ -236,7 +238,6 @@ class Formatter
             return $first;
         };
 
-
         $text = $m->render($tplText, $context);
 
         //Cleanup the output
@@ -254,7 +255,7 @@ class Formatter
 
             $text = implode(', ', $backupParts);
 
-            //Cleanup the output
+            //Cleanup the output again
             $text = $this->cleanupRendered($text);
         }
 
