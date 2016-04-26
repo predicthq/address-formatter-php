@@ -1,0 +1,81 @@
+---
+description: Lokku office
+components:
+    city: London Borough of Islington
+    country: United Kingdom
+    country_code: GB
+    county: London
+    house: Lokku Ltd
+    house_number: 82
+    postcode: EC1M 5RF
+    road: Clerkenwell Road
+    state: England
+    state_district: Greater London
+    suburb: Clerkenwell
+expected:  |
+    Lokku Ltd
+    82 Clerkenwell Road
+    London EC1M 5RF
+    United Kingdom
+
+---
+description: London
+components:
+    city: London
+    country: United Kingdom
+    country_code: GB
+    county: London
+    state: England
+    state_district: Greater London
+expected:  |
+    London
+    United Kingdom
+
+---
+description: Manchester
+components:
+    city: Manchester
+    country: United Kingdom
+    country_code: GB
+    county: Manchester
+    state: England
+expected:  |
+    Manchester
+    England
+    United Kingdom
+
+
+---
+description: just a suburb
+components:
+    city: London Borough of Islington
+    country: United Kingdom
+    country_code: gb
+    county: London
+    state: England
+    state_district: Greater London
+    suburb: Clerkenwell
+expected:  |
+    Clerkenwell
+    London
+    United Kingdom
+
+---
+description: City of Westminster, 51.52089885, -0.14007993
+components:
+    city: City of Westminster
+    country: United Kingdom
+    country_code: gb
+    county: London
+    house_number: 115
+    postcode: W1T 5DU
+    road: New Cavendish Street
+    state: England
+    state_district: Greater London
+    suburb: Fitzrovia
+    university: University of Westminster
+expected:  |
+    University of Westminster
+    115 New Cavendish Street
+    London W1T 5DU
+    United Kingdom

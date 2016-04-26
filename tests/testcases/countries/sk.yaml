@@ -1,0 +1,20 @@
+# Slovakia
+---
+description: Bratislava - 48.14776,17.10384
+components:
+    city: District of Bratislava I
+    city_district: Bratislava - mestská časť Staré Mesto
+    country: Slovakia
+    country_code: sk
+    county: Bratislava
+    house_number: 666/20
+    postcode: 811 03
+    road: Panenská
+    state: Region of Bratislava
+    suburb: Staré Mesto
+expected:  |
+    Panenská 666/20
+    811 03 Bratislava I
+    Slovakia
+
+

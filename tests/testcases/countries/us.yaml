@@ -1,0 +1,115 @@
+---
+description: house number in California
+components:
+    house_number: 301
+    road: Hamilton Avenue
+    neighbourhood: Crescent Park
+    city: Palo Alto
+    postcode: 94303
+    county: Santa Clara County
+    state: California
+    country: United States of America
+    country_code: US
+expected:  |
+    301 Hamilton Avenue
+    Palo Alto, CA 94303
+    United States of America
+
+---
+description: correct "USA"
+components:
+    house_number: 301
+    road: Hamilton Avenue
+    neighbourhood: Crescent Park
+    city: Palo Alto
+    postcode: 94303
+    county: Santa Clara County
+    state: California
+    country: USA
+    country_code: US
+expected:  |
+    301 Hamilton Avenue
+    Palo Alto, CA 94303
+    United States of America
+
+---
+description: correct "United States"
+components:
+    house_number: 301
+    road: Hamilton Avenue
+    neighbourhood: Crescent Park
+    city: Palo Alto
+    postcode: 94303
+    county: Santa Clara County
+    state: California
+    country: United States
+    country_code: US
+expected:  |
+    301 Hamilton Avenue
+    Palo Alto, CA 94303
+    United States of America
+
+---
+description: correct "US"
+components:
+    house_number: 301
+    road: Hamilton Avenue
+    neighbourhood: Crescent Park
+    city: Palo Alto
+    postcode: 94303
+    county: Santa Clara County
+    state: California
+    country: US
+    country_code: US
+expected:  |
+    301 Hamilton Avenue
+    Palo Alto, CA 94303
+    United States of America
+
+---
+description: town in CA
+components:
+    city: Palo Alto
+    country: United States of America
+    country_code: US
+    county: Santa Clara County
+    state: California
+expected:  |
+    Palo Alto
+    Santa Clara County
+    California
+    United States of America
+---
+description: house number in New York, no city
+components:
+    house_number: 175
+    road: Varick Street
+    neighbourhood: Greenwich Village
+    postcode: 10014
+    county: New York County
+    state_district: New York City
+    state: New York
+    country: United States of America
+    country_code: US
+expected:  |
+    175 Varick Street
+    New York City, NY 10014
+    United States of America
+#
+# United States Virgin Islands
+---
+description: Library in Charlotte Amalie, 18.34119,-64.93546
+components:
+        country: United States of America
+        country_code: us
+        county: St. Thomas Island
+        library: Enid M Baa Library and Archives
+        postcode: 00803
+        road: Dronningens Gade
+        state: United States Virgin Islands
+        town: Charlotte Amalie
+expected:  |
+    Enid M Baa Library and Archives
+    Dronningens Gade
+    Charlotte Amalie, VI 00803
+    United States of America
