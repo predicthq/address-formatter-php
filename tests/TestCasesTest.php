@@ -38,8 +38,9 @@ class TestCasesTest extends PHPUnit_Framework_TestCase
             }
         }
 
+        $f = new Formatter();
+
         foreach ($testData as $key => $val) {
-            $f = new Formatter();
             $text = $f->formatArray($val['components']);
 
             $this->assertSame($val['expected'], $text, $val['description']);
