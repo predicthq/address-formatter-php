@@ -20,7 +20,8 @@
         "mustache/mustache": "~2.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^5.3"
+        "phpunit/phpunit": "^5.3",
+        "satooshi/php-coveralls": "^1.0"
     },
     "autoload": {
         "psr-4": {

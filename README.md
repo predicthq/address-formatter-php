@@ -1,6 +1,7 @@
 # Address Formatter for PHP
 
 [![Build Status](https://travis-ci.org/predicthq/address-formatter-php.svg?branch=master)](https://travis-ci.org/predicthq/address-formatter-php)
+[![Coverage Status](https://coveralls.io/repos/github/predicthq/address-formatter-php/badge.svg?branch=master)](https://coveralls.io/github/predicthq/address-formatter-php?branch=master)
 
 This library uses the address templates from <https://github.com/OpenCageData/address-formatting> to format addresses
 differently depending on the country.

@@ -1,13 +1,17 @@
 language: php
-
 php:
-  - '5.6'
-  - '7.0'
-  - hhvm
-  - nightly
-
+- '5.6'
+- '7.0'
+- hhvm
+- nightly
 install:
-  - composer self-update
-  - composer install --prefer-source --no-interaction --dev
-
-script: phpunit
+- composer self-update
+- composer install --prefer-source --no-interaction --dev
+script:
+ - mkdir -p build/logs
+ - phpunit
+after_success:
+  - travis_retry php vendor/bin/coveralls
+notifications:
+  slack:
+    secure: RaIexZD4TdtqzG3k3WwZTby/uKm2BiD9mXd5TdmrLv9UjtT5n3Dnl+xevm3PgPqk4L2EBJBQteSCMEDccOP3QYVLt6MwuZa0h7nWg4jkZynRmbPbDR8DFFQ5cmdG1UdplWq6w7g/9k0o5EBGdUdMiCcfQjbN2RGetiNsL4AVzQ9A09SQhi9Qjj1LoO5LzNyoILv/xCe8u7K24aZH53vOfKre8VY4yCXy+lMYC0ZK4ih7f5xiCFF0V2VnVaFGEV8X9u/EtC1VB1J34IxffZQrTbLVXeP637iDASdIyEWCn9L5p/azfK+7wxiVZcsv2zhZ2Em9UGKKy0ryWWVyr2v8wrvgT3eiW4EkgLMmAMY5f9a/nnTDgybxP2vzAT2AVSMZZou4xTeUF3Ohgwkokys4wyThwaO0kiiHVEgt/CcOtH6y1M968k3y1bKGD448lK5w8rk1vTLs26hJL8SrY03dLLpWBLCjAI0pQQuyMnUWmsC/BJ3IvUj/7bl5UI8RBfk/HpP+NzRLEmIquFajMTVYgcSfSihoqUrqNPoY2LZdi77/+BlxCmN/5eHKjGqOCFgiHQC7SHAwWq9R0Hl9xTtiegeTgqW5HV9WHXIGscjIbrFz3fTsy4pqt6ySQ35xMTJ/EfXyoloRuv5rBNf76ZpgY7oxDdNMp+LOzxhgNRDnpDA=
