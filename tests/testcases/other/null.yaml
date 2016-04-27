@@ -1,9 +1,0 @@
----
-# 0, 0
-description: Null Island
-components:
-    island: Null Island
-expected:  |
-    Null Island
-
-
