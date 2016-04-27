@@ -1,8 +1,9 @@
 <?php
+namespace PredictHQ\AddressFormatter\Test;
 
 use PredictHQ\AddressFormatter\Address;
 
-class AddressObjectTest extends PHPUnit_Framework_TestCase
+class AddressObjectTest extends \PHPUnit_Framework_TestCase
 {
     public function testAddressObject()
     {

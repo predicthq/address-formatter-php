@@ -1,6 +1,7 @@
 {
     "name": "predicthq/address-formatter",
     "description": "Address formatter using country templates from https://github.com/OpenCageData/address-formatting",
+    "keywords": ["predicthq","address"],
     "type": "library",
     "license": "MIT",
     "authors": [
