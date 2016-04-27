@@ -9,7 +9,7 @@ class TestCasesTest extends \PHPUnit_Framework_TestCase
     public function testCountries()
     {
         //Load all countries
-        $testCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), 'testcases'));
+        $testCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'testcases'));
         $countriesPath = implode(DIRECTORY_SEPARATOR, array($testCasesPath, 'countries', '*.yaml'));
         $othersPath = implode(DIRECTORY_SEPARATOR, array($testCasesPath, 'other', '*.yaml'));
 

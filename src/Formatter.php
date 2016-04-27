@@ -500,7 +500,7 @@ class Formatter
 
     public function loadTemplates()
     {
-        $templatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), 'templates'));
+        $templatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'conf'));
         $countriesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'countries', 'worldwide.yaml'));
         $componentsPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'components.yaml'));
         $stateCodesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'state_codes.yaml'));
