@@ -15,6 +15,9 @@
             "role": "Developer"
         }
     ],
+    "scripts": {
+        "post-dependencies-solving": "git submodule update --init"
+    },
     "require": {
         "php": ">=5.6.0",
         "symfony/yaml": "~3.0",
