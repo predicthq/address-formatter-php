@@ -16,8 +16,12 @@
         }
     ],
     "scripts": {
-        "post-dependencies-solving": [
-            "git submodule update --init"
+        "post-install-cmd": [
+            "git clone https://github.com/predicthq/address-formatting.git",
+            "cd address-formatting; git reset --hard f9e44ece2ac16c4a9872e76b31532b64f3f27667"
+        ],
+        "post-update-cmd": [
+            "cd address-formatting; git reset --hard f9e44ece2ac16c4a9872e76b31532b64f3f27667"
         ]
     },
     "require": {
