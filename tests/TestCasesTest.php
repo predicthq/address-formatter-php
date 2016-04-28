@@ -13,13 +13,13 @@ class TestCasesTest extends \PHPUnit_Framework_TestCase
          * the address-formatting templates as a separate package via our composer.json and if the address-formatting
          * templates exist at the expected location for a composer loaded package, we use that by default.
          */
-        $composerTestCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', '..', '..', 'opencagedata', 'address-formatting', 'testcases'));
+        $composerTestCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', '..', 'address-formatter-templates', 'testcases'));
 
         if (is_dir($composerTestCasesPath)) {
             $testCasesPath = $composerTestCasesPath;
         } else {
             //Use the git submodule path
-            $testCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'testcases'));
+            $testCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatter-templates', 'testcases'));
         }
 
         //Load all countries

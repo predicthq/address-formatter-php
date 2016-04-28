@@ -15,23 +15,9 @@
             "role": "Developer"
         }
     ],
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "opencagedata/address-formatting",
-                "version": "dev-master",
-                "source": {
-                    "type": "git",
-                    "url": "https://github.com/OpenCageData/address-formatting.git",
-                    "reference": "e40650fe138064af224a769d2f0b4cd7454fcb7c"
-                }
-            }
-        }
-    ],
     "require": {
         "php": ">=5.6.0",
-        "opencagedata/address-formatting": "dev-master",
+        "predicthq/address-formatter-templates": "~1.0",
         "symfony/yaml": "~3.0",
         "mustache/mustache": "~2.0"
     },

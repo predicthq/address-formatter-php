@@ -1,3 +1,9 @@
 [submodule "address-formatting"]
 	path = address-formatting
 	url = https://github.com/OpenCageData/address-formatting.git
+[submodule "address-formatting-templates"]
+	path = address-formatting-templates
+	url = https://github.com/predicthq/address-formatting-templates.git
+[submodule "address-formatter-templates"]
+	path = address-formatter-templates
+	url = https://github.com/predicthq/address-formatter-templates.git
