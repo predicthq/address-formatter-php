@@ -2,6 +2,7 @@
 namespace PredictHQ\AddressFormatter;
 
 use Symfony\Component\Yaml\Yaml;
+use PredictHQ\AddressFormatter\Exception\TemplatesMissingException;
 
 /**
  * Format an address based on the country template.
@@ -500,42 +501,59 @@ class Formatter
 
     public function loadTemplates()
     {
-        $templatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'conf'));
-        $countriesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'countries', 'worldwide.yaml'));
-        $componentsPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'components.yaml'));
-        $stateCodesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'state_codes.yaml'));
-
-        $components = [];
-        $componentAliases = [];
-        $templates = [];
-        $stateCodes = [];
-
         /**
-         * The components file is made up of multiple yaml documents but the symfony yaml parser
-         * doesn't support multiple docs in a single file. So we split it into multiple docs.
+         * Unfortunately it's not possible to include a git submodule with a composer package, so we load
+         * the address-formatting templates as a separate package via our composer.json and if the address-formatting
+         * templates exist at the expected location for a composer loaded package, we use that by default.
          */
-        $componentYamlParts = explode('---', file_get_contents($componentsPath));
+        $composerTemplatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', '..', '..', 'opencagedata', 'address-formatting', 'conf'));
 
-        foreach ($componentYamlParts as $key => $val) {
-            $component = Yaml::parse($val);
-
-            if (isset($component['aliases'])) {
-                foreach ($component['aliases'] as $k => $v) {
-                    $componentAliases[$v] = $component['name'];
-                }
-            }
-
-            $components[$component['name']] = (isset($component['aliases'])) ? $component['aliases'] : [];
+        if (is_dir($composerTemplatesPath)) {
+            $templatesPath = $composerTemplatesPath;
+        } else {
+            //Use the git submodule path
+            $templatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'conf'));
         }
 
-        //Load the country templates and state codes
-        $templates = Yaml::parse(file_get_contents($countriesPath));
-        $stateCodes = Yaml::parse(file_get_contents($stateCodesPath));
+        if (is_dir($templatesPath)) {
+            $countriesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'countries', 'worldwide.yaml'));
+            $componentsPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'components.yaml'));
+            $stateCodesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'state_codes.yaml'));
 
-        $this->components = $components;
-        $this->componentAliases = $componentAliases;
-        $this->templates = $templates;
-        $this->stateCodes = $stateCodes;
+            $components = [];
+            $componentAliases = [];
+            $templates = [];
+            $stateCodes = [];
+
+            /**
+             * The components file is made up of multiple yaml documents but the symfony yaml parser
+             * doesn't support multiple docs in a single file. So we split it into multiple docs.
+             */
+            $componentYamlParts = explode('---', file_get_contents($componentsPath));
+
+            foreach ($componentYamlParts as $key => $val) {
+                $component = Yaml::parse($val);
+
+                if (isset($component['aliases'])) {
+                    foreach ($component['aliases'] as $k => $v) {
+                        $componentAliases[$v] = $component['name'];
+                    }
+                }
+
+                $components[$component['name']] = (isset($component['aliases'])) ? $component['aliases'] : [];
+            }
+
+            //Load the country templates and state codes
+            $templates = Yaml::parse(file_get_contents($countriesPath));
+            $stateCodes = Yaml::parse(file_get_contents($stateCodesPath));
+
+            $this->components = $components;
+            $this->componentAliases = $componentAliases;
+            $this->templates = $templates;
+            $this->stateCodes = $stateCodes;
+        } else {
+            throw new TemplatesMissingException('Address formatting templates path cannot be found.');
+        }
     }
 
     public function getComponents()

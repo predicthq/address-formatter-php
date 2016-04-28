@@ -8,8 +8,21 @@ class TestCasesTest extends \PHPUnit_Framework_TestCase
 {
     public function testCountries()
     {
+        /**
+         * Unfortunately it's not possible to include a git submodule with a composer package, so we load
+         * the address-formatting templates as a separate package via our composer.json and if the address-formatting
+         * templates exist at the expected location for a composer loaded package, we use that by default.
+         */
+        $composerTestCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', '..', '..', 'opencagedata', 'address-formatting', 'testcases'));
+
+        if (is_dir($composerTestCasesPath)) {
+            $testCasesPath = $composerTestCasesPath;
+        } else {
+            //Use the git submodule path
+            $testCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'testcases'));
+        }
+
         //Load all countries
-        $testCasesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatting', 'testcases'));
         $countriesPath = implode(DIRECTORY_SEPARATOR, array($testCasesPath, 'countries', '*.yaml'));
         $othersPath = implode(DIRECTORY_SEPARATOR, array($testCasesPath, 'other', '*.yaml'));
 

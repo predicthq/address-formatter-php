@@ -15,17 +15,22 @@
             "role": "Developer"
         }
     ],
-    "scripts": {
-        "post-package-install": [
-            "git clone https://github.com/predicthq/address-formatting.git",
-            "cd address-formatting && git reset --hard f9e44ece2ac16c4a9872e76b31532b64f3f27667"
-        ],
-        "post-package-update": [
-            "cd address-formatting && git reset --hard f9e44ece2ac16c4a9872e76b31532b64f3f27667"
-        ]
-    },
+    "repositories": [
+        {
+            "type": "package",
+            "package": {
+                "name": "opencagedata/address-formatting",
+                "version": "1.0.0",
+                "source": {
+                    "url": "https://github.com/OpenCageData/address-formatting.git",
+                    "type": "vcs"
+                }
+            }
+        }
+    ],
     "require": {
         "php": ">=5.6.0",
+        "opencagedata/address-formatting": "~1.0",
         "symfony/yaml": "~3.0",
         "mustache/mustache": "~2.0"
     },
