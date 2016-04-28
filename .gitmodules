@@ -1,3 +1,0 @@
-[submodule "address-formatting"]
-	path = address-formatting
-	url = git@github.com:predicthq/address-formatting.git
