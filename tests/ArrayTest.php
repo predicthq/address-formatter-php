@@ -30,4 +30,23 @@ New Zealand
 
         $this->assertSame($expected, $actual);
     }
+
+    public function testUtf8AddressArray()
+    {
+        $address = [
+          'county' => 'Città metropolitana di Roma Capitale',
+          'region' => 'Latium',
+          'country_code' => 'IT',
+          'country' => 'Italy'
+        ];
+
+        $expected = 'Città metropolitana di Roma Capitale
+Italy
+';
+
+        $f = new Formatter();
+        $actual = $f->formatArray($address);
+
+        $this->assertSame($expected, $actual);
+    }
 }

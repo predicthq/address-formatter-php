@@ -239,17 +239,17 @@ class Formatter
     private function cleanupRendered($text)
     {
         $replacements = [
-            '/[\},\s]+$/' => '',
-            '/^[,\s]+/' => '',
-            '/,\s*,/' => ', ', //multiple commas to one
-            '/\h+,\h+/' => ', ', //one horiz whitespace behind comma
-            '/\h\h+/' => ' ', //multiple horiz whitespace to one
-            "/\h\n/" => "\n", //horiz whitespace, newline to newline
-            "/\n,/" => "\n", //newline comma to just newline
-            '/,,+/' => ',', //multiple commas to one
-            "/,\n/" => "\n", //comma newline to just newline
-            "/\n\h+/" => "\n", //newline plus space to newline
-            "/\n\n+/" => "\n", //multiple newline to one
+            '/[\},\s]+$/u' => '',
+            '/^[,\s]+/u' => '',
+            '/,\s*,/u' => ', ', //multiple commas to one
+            '/\h+,\h+/u' => ', ', //one horiz whitespace behind comma
+            '/\h\h+/u' => ' ', //multiple horiz whitespace to one
+            "/\h\n/u" => "\n", //horiz whitespace, newline to newline
+            "/\n,/u" => "\n", //newline comma to just newline
+            '/,,+/u' => ',', //multiple commas to one
+            "/,\n/u" => "\n", //comma newline to just newline
+            "/\n\h+/u" => "\n", //newline plus space to newline
+            "/\n\n+/u" => "\n", //multiple newline to one
         ];
 
         foreach ($replacements as $key => $val) {
