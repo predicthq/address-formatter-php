@@ -8,7 +8,7 @@ install:
 - composer install --prefer-source --no-interaction --dev
 script:
  - mkdir -p build/logs
- - phpunit
+ - vendor/bin/phpunit
 after_success:
   - travis_retry php vendor/bin/coveralls
 notifications:
