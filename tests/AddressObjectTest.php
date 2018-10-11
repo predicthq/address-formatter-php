@@ -158,7 +158,7 @@ Palestine
           ->setCountryCode('um')
           ->setIsland('Wake Island');
 
-        $expected = 'US Minor Outlying Islands
+        $expected = 'Wake Island, UM
 United States of America
 ';
 

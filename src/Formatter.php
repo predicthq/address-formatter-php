@@ -24,6 +24,9 @@ class Formatter
     private $componentAliases = [];
     private $templates = [];
     private $stateCodes = [];
+    private $countryToLang = [];
+    private $countyCodes = [];
+    private $abbreviations = [];
     private $validReplacementComponents = [
         'state',
     ];
@@ -89,9 +92,16 @@ class Formatter
             $addressArray['continent'] = $address->getContinent();
         }
 
-        return $this->formatArray($addressArray);
+        return $this->formatArray($addressArray, $options);
     }
 
+    // $options
+    // 'country', which should be an uppercase ISO 3166-1:alpha-2 code
+    // e.g. 'GB' for Great Britain, 'DE' for Germany, etc.
+    // If ommited we try to find the country in the address components.
+    //
+    // 'abbreviate', if supplied common abbreviations are applied
+    // to the resulting output.
     public function formatArray($addressArray, $options = [])
     {
         $countryCode = (isset($options['country'])) ? $options['country'] : $this->determineCountryCode($addressArray);
@@ -131,12 +141,17 @@ class Formatter
         }
 
         $addressArray = $this->addStateCode($addressArray);
+        $addressArray = $this->addCountyCode($addressArray);
 
         //Add attention, but only if needed
         $unknownComponents = $this->findUnknownComponents($addressArray);
 
         if (count($unknownComponents) > 0) {
             $addressArray['attention'] = implode(', ', $unknownComponents);
+        }
+
+        if (isset($options['abbreviate']) && $options['abbreviate'] == true) {
+            $addressArray = $this->abbreviate($addressArray);
         }
 
         //Render the template
@@ -164,6 +179,40 @@ class Formatter
         }
 
         return $unknown;
+    }
+
+    private function abbreviate($addressArray)
+    {
+        if (isset($addressArray['country_code'])) {
+            $countryCode = strtoupper($addressArray['country_code']);
+
+            if (array_key_exists($countryCode, $this->countryToLang)) {
+                $langs = explode(',', $this->countryToLang[$countryCode]);
+
+                foreach ($langs as $lang) {
+                    $lang = strtoupper($lang);
+
+                    // Do we have an abbreviation for this language?
+                    if (array_key_exists($lang, $this->abbreviations)) {
+                        $abbreviations = $this->abbreviations[$lang];
+
+                        foreach ($abbreviations as $key => $val) {
+                            if (array_key_exists($key, $addressArray)) {
+                                foreach ($val as $long => $short) {
+                                  $orig = $addressArray[$key];
+                                    $addressArray[$key] = preg_replace("/\b$long\b/", $short, $addressArray[$key]);
+
+                                    if ($addressArray[$key] !== $orig) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return $addressArray;
     }
 
     private function postFormatReplace($text, $replacements)
@@ -241,6 +290,7 @@ class Formatter
         $replacements = [
             '/[\},\s]+$/u' => '',
             '/^[,\s]+/u' => '',
+            '/^- /u' => '', // line starting with dash due to a parameter missing
             '/,\s*,/u' => ', ', //multiple commas to one
             '/\h+,\h+/u' => ', ', //one horiz whitespace behind comma
             '/\h\h+/u' => ' ', //multiple horiz whitespace to one
@@ -338,7 +388,7 @@ class Formatter
         foreach ($addressArray as $key => $val) {
             foreach ($replacements as $replacement) {
                 if (preg_match('/^'.$key.'=(.+)/', $replacement[0], $matches) > 0) {
-                    //This is a key-specific replacement (e.g., city=ABC), work out the vaule to replace
+                    //This is a key-specific replacement (e.g., city=ABC), work out the value to replace
                     $from = $matches[1];
 
                     if ($from == $val) {
@@ -355,15 +405,60 @@ class Formatter
 
     private function addStateCode($addressArray)
     {
-        if (!isset($addressArray['state_code'])) {
-            if (isset($addressArray['state']) && isset($addressArray['country_code'])) {
+        return $this->addCode('state', $addressArray);
+    }
+
+    private function addCountyCode($addressArray)
+    {
+        return $this->addCode('county', $addressArray);
+    }
+
+    private function addCode($type, $addressArray)
+    {
+        if (array_key_exists('country_code', $addressArray) && array_key_exists($type, $addressArray)) {
+            $code = $type . '_code';
+
+            if (!array_key_exists($code, $addressArray)) {
                 //Make sure country code is uppercase
                 $addressArray['country_code'] = strtoupper($addressArray['country_code']);
 
-                if (isset($this->stateCodes[$addressArray['country_code']])) {
-                    foreach($this->stateCodes[$addressArray['country_code']] as $key => $val) {
-                        if (strtoupper($addressArray['state']) == strtoupper($val)) {
-                            $addressArray['state_code'] = $key;
+                if ($type === 'state') {
+                    if (array_key_exists($addressArray['country_code'], $this->stateCodes)) {
+                        foreach($this->stateCodes[$addressArray['country_code']] as $key => $val) {
+                            if (strtoupper($addressArray['state']) == strtoupper($val)) {
+                                $addressArray['state_code'] = $key;
+                            }
+                        }
+
+                        // Try again for odd variants like "United States Virgin Islands"
+                        if (!array_key_exists('state_code', $addressArray)) {
+                            if ($addressArray['country_code'] == 'US') {
+                                if (preg_match('/^united states/i', $addressArray['state']) > 0) {
+                                    $state = $addressArray['state'];
+                                    $state = preg_replace('/^United States/i', 'US', $state);
+
+                                    foreach ($this->stateCodes[$addressArray['country_code']] as $key => $val) {
+                                        if (strtoupper($state) == strtoupper($val)) {
+                                            $addressArray['state_code'] = $key;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (preg_match('/^washington,? d\.?c\.?/i', $addressArray['state']) > 0) {
+                                    $addressArray['state_code'] = 'DC';
+                                    $addressArray['state'] = 'District of Columbia';
+                                    $addressArray['city'] = 'Washington';
+                                }
+                            }
+                        }
+                    }
+                } elseif ($type === 'county') {
+                    if (array_key_exists($addressArray['country_code'], $this->countyCodes)) {
+                        foreach($this->countyCodes[$addressArray['country_code']] as $key => $val) {
+                            if (strtoupper($addressArray['county']) == strtoupper($val)) {
+                                $addressArray['county_code'] = $key;
+                            }
                         }
                     }
                 }
@@ -439,8 +534,16 @@ class Formatter
 
     private function sanityCleanAddress($addressArray)
     {
-        if (isset($addressArray['postcode']) && strlen($addressArray['postcode']) > 20) {
-            unset($addressArray['postcode']);
+        if (isset($addressArray['postcode'])) {
+            if (strlen($addressArray['postcode']) > 20) {
+                unset($addressArray['postcode']);
+            } elseif (preg_match('/\d+;\d+/', $addressArray['postcode']) > 0) {
+                // Sometimes OSM has postcode ranges
+                unset($addressArray['postcode']);
+            } elseif (preg_match('/^(\d{5}),\d{5}/', $addressArray['postcode'], $matches) > 0) {
+                // Use the first postcode from the range
+                $addressArray['postcode'] = $matches[1];
+            }
         }
 
         //Try and catch values containing URLs
@@ -492,11 +595,17 @@ class Formatter
             $countriesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'countries', 'worldwide.yaml'));
             $componentsPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'components.yaml'));
             $stateCodesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'state_codes.yaml'));
+            $countryToLangPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'country2lang.yaml'));
+            $countyCodesPath = implode(DIRECTORY_SEPARATOR, array($templatesPath, 'county_codes.yaml'));
+            $abbreviationFiles = glob(implode(DIRECTORY_SEPARATOR, array($templatesPath, 'abbreviations/*.yaml')));
 
             $components = [];
             $componentAliases = [];
             $templates = [];
             $stateCodes = [];
+            $countryToLang = [];
+            $countyCodes = [];
+            $abbreviations = [];
 
             /**
              * The components file is made up of multiple yaml documents but the symfony yaml parser
@@ -516,14 +625,26 @@ class Formatter
                 $components[$component['name']] = (isset($component['aliases'])) ? $component['aliases'] : [];
             }
 
-            //Load the country templates and state codes
+            //Load the country templates, state codes and country2lang data
             $templates = Yaml::parse(file_get_contents($countriesPath));
             $stateCodes = Yaml::parse(file_get_contents($stateCodesPath));
+            $countryToLang = Yaml::parse(file_get_contents($countryToLangPath));
+            $countyCodes = Yaml::parse(file_get_contents($countyCodesPath));
+
+            //Load the abbreviations files
+            foreach ($abbreviationFiles as $key => $val) {
+                $lang = strtoupper(basename($val, '.yaml'));
+                $data = Yaml::parse(file_get_contents($val));
+                $abbreviations[$lang] = $data;
+            }
 
             $this->components = $components;
             $this->componentAliases = $componentAliases;
             $this->templates = $templates;
             $this->stateCodes = $stateCodes;
+            $this->countryToLang = $countryToLang;
+            $this->countyCodes = $countyCodes;
+            $this->abbreviations = $abbreviations;
         } else {
             throw new TemplatesMissingException('Address formatting templates path cannot be found.');
         }
