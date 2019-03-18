@@ -31,9 +31,14 @@ class Formatter
         'state',
     ];
 
-    public function __construct()
+    /**
+     * Specify a custom templates path
+     * 
+     * @param string $templatesPath
+     */
+    public function __construct($templatesPath = '')
     {
-        $this->loadTemplates();
+        $this->loadTemplates($templatesPath);
     }
 
     /**
@@ -575,20 +580,22 @@ class Formatter
         return ($missing < $minThreshold) ? true : false;
     }
 
-    public function loadTemplates()
+    public function loadTemplates($templatesPath = '')
     {
-        /**
-         * Unfortunately it's not possible to include a git submodule with a composer package, so we load
-         * the address-formatting templates as a separate package via our composer.json and if the address-formatting
-         * templates exist at the expected location for a composer loaded package, we use that by default.
-         */
-        $composerTemplatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', '..', 'address-formatter-templates', 'conf'));
-
-        if (is_dir($composerTemplatesPath)) {
-            $templatesPath = $composerTemplatesPath;
-        } else {
-            //Use the git submodule path
-            $templatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatter-templates', 'conf'));
+        if ($templatesPath == '') {
+            /**
+             * Unfortunately it's not possible to include a git submodule with a composer package, so we load
+             * the address-formatting templates as a separate package via our composer.json and if the address-formatting
+             * templates exist at the expected location for a composer loaded package, we use that by default.
+             */
+            $composerTemplatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', '..', 'address-formatter-templates', 'conf'));
+    
+            if (is_dir($composerTemplatesPath)) {
+                $templatesPath = $composerTemplatesPath;
+            } else {
+                //Use the git submodule path
+                $templatesPath = implode(DIRECTORY_SEPARATOR, array(realpath(dirname(__FILE__)), '..', 'address-formatter-templates', 'conf'));
+            }
         }
 
         if (is_dir($templatesPath)) {
