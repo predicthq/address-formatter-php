@@ -200,7 +200,7 @@ class Formatter
                             if (array_key_exists($key, $addressArray)) {
                                 foreach ($val as $long => $short) {
                                   $orig = $addressArray[$key];
-                                    $addressArray[$key] = preg_replace("/\b$long\b/", $short, $addressArray[$key]);
+                                    $addressArray[$key] = preg_replace("/\b$long\b/u", $short, $addressArray[$key]);
 
                                     if ($addressArray[$key] !== $orig) {
                                     }
@@ -223,7 +223,7 @@ class Formatter
         $afterPieces = [];
 
         foreach ($beforePieces as $piece) {
-            $piece = preg_replace('/^\s+/', '', $piece);
+            $piece = preg_replace('/^\s+/u', '', $piece);
 
             if (!isset($seen[$piece])) {
                 $seen[$piece] = 0;
@@ -242,7 +242,7 @@ class Formatter
 
         //Do any country-specific rules
         foreach ($replacements as $replacement) {
-            $text = preg_replace('/'.$replacement[0].'/', $replacement[1], $text);
+            $text = preg_replace('/'.$replacement[0].'/u', $replacement[1], $text);
         }
 
         return $text;
@@ -312,8 +312,8 @@ class Formatter
         $afterLines = [];
 
         foreach ($beforeLines as $line) {
-            $line = preg_replace('/^\h+/', '', $line);
-            $line = preg_replace('/\h+$/', '', $line);
+            $line = preg_replace('/^\h+/u', '', $line);
+            $line = preg_replace('/\h+$/u', '', $line);
 
             if (!isset($seenLines[$line])) {
                 $seenLines[$line] = 0;
@@ -332,8 +332,8 @@ class Formatter
             $afterWords = [];
 
             foreach ($beforeWords as $word) {
-                $word = preg_replace('/^\h+/', '', $word);
-                $word = preg_replace('/\h+$/', '', $word);
+                $word = preg_replace('/^\h+/u', '', $word);
+                $word = preg_replace('/\h+$/u', '', $word);
 
                 if (!isset($seenWords[$word])) {
                     $seenWords[$word] = 0;
@@ -355,8 +355,8 @@ class Formatter
 
         $text = implode("\n", $afterLines);
 
-        $text = preg_replace('/^\s+/', '', $text); //remove leading whitespace
-        $text = preg_replace('/\s+$/', '', $text); //remove end whitespace
+        $text = preg_replace('/^\s+/u', '', $text); //remove leading whitespace
+        $text = preg_replace('/\s+$/u', '', $text); //remove end whitespace
 
         $text .= "\n"; //add final newline
 
