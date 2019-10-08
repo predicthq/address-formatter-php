@@ -123,9 +123,11 @@ class Formatter
         //Figure out which template to use
         $tpl = (isset($this->templates[strtoupper($countryCode)])) ? $this->templates[strtoupper($countryCode)] : $this->templates['default'];
         $tplText = (isset($tpl['address_template'])) ? $tpl['address_template'] : '';
+        $requiredComponents = (isset($this->templates[strtoupper($countryCode)]['required_components'])) ? $this->templates[strtoupper($countryCode)]['required_components'] : $this->templates['default']['required_components'];
+        $minThreshold = (isset($this->templates[strtoupper($countryCode)]['minimum_threshold'])) ? $this->templates[strtoupper($countryCode)]['minimum_threshold'] : $this->templates['default']['minimum_threshold'];
 
         //Do we have the minimum components for an address, or should we use the fallback template?
-        if (!$this->hasMinimumAddressComponents($addressArray)) {
+        if (!$this->hasMinimumAddressComponents($addressArray, $requiredComponents, $minThreshold)) {
             if (isset($tpl['fallback_template'])) {
                 $tplText = $tpl['fallback_template'];
             } elseif (isset($this->templates['default']['fallback_template'])) {
@@ -556,11 +558,9 @@ class Formatter
         return $addressArray;
     }
 
-    private function hasMinimumAddressComponents($addressArray)
+    private function hasMinimumAddressComponents($addressArray, $requiredComponents = ['road', 'postcode'], $minThreshold = 2)
     {
         $missing = 0;
-        $minThreshold = 2;
-        $requiredComponents = ['road', 'postcode']; //These should probably be provided in the templates or somewhere else other than here!
 
         foreach ($requiredComponents as $requiredComponent) {
             if (!isset($addressArray[$requiredComponent])) {
