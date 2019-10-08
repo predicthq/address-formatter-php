@@ -102,6 +102,9 @@ class Formatter
     //
     // 'abbreviate', if supplied common abbreviations are applied
     // to the resulting output.
+    //
+    // 'allownull', if the template matched is empty, allow a null
+    //  result rather than returning everything available
     public function formatArray($addressArray, $options = [])
     {
         $countryCode = (isset($options['country'])) ? $options['country'] : $this->determineCountryCode($addressArray);
@@ -155,7 +158,7 @@ class Formatter
         }
 
         //Render the template
-        $text = $this->render($tplText, $addressArray);
+        $text = $this->render($tplText, $addressArray, $options);
 
         //Post render cleanup
         if (isset($tpl['postformat_replace'])) {
@@ -248,39 +251,44 @@ class Formatter
         return $text;
     }
 
-    private function render($tplText, $addressArray)
+    private function render($tplText, $addressArray, $options)
     {
         $m = new \Mustache_Engine;
 
         $context = $addressArray;
-        $context['first'] = function($text) use (&$m, &$addressArray) {
-            $newText = $m->render($text, $addressArray);
+        $context['first'] = function($text) use (&$m, &$addressArray, $options) {
+            $newText = $m->render($text, $addressArray, $options);
             $matched = preg_split("/\s*\|\|\s*/", $newText);
             $first = current(array_filter($matched));
 
             return $first;
         };
 
-        $text = $m->render($tplText, $context);
+        $text = $m->render($tplText, $context, $options);
 
         //Cleanup the output
         $text = $this->cleanupRendered($text);
 
         //Make sure we have at least something
         if (preg_match('/\w/u', $text) == 0) {
-            $backupParts = [];
-
-            foreach ($addressArray as $key => $val) {
-                if (strlen($val) > 0) {
-                    $backupParts[] = $val;
+            if (!isset($options['allownull']) || $options['allownull'] != true) {
+                $backupParts = [];
+    
+                foreach ($addressArray as $key => $val) {
+                    if (strlen($val) > 0) {
+                        $backupParts[] = $val;
+                    }
                 }
+    
+                $text = implode(', ', $backupParts);
             }
-
-            $text = implode(', ', $backupParts);
-
-            //Cleanup the output again
-            $text = $this->cleanupRendered($text);
+            else {
+                $text = ' ';
+            }
         }
+
+        //Cleanup the output again
+        $text = $this->cleanupRendered($text);
 
         return $text;
     }
