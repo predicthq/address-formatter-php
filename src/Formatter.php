@@ -425,8 +425,17 @@ class Formatter
                 if ($type === 'state') {
                     if (array_key_exists($addressArray['country_code'], $this->stateCodes)) {
                         foreach($this->stateCodes[$addressArray['country_code']] as $key => $val) {
-                            if (strtoupper($addressArray['state']) == strtoupper($val)) {
-                                $addressArray['state_code'] = $key;
+                            if(is_array($val)) {
+                                foreach($val as $state) {
+                                    if (strtoupper($addressArray['state']) == strtoupper($state)) {
+                                        $addressArray['state_code'] = $key;
+                                    }
+                                }
+                            }
+                            else { 
+                                if (strtoupper($addressArray['state']) == strtoupper($val)) {
+                                    $addressArray['state_code'] = $key;
+                                }
                             }
                         }
 
@@ -456,8 +465,17 @@ class Formatter
                 } elseif ($type === 'county') {
                     if (array_key_exists($addressArray['country_code'], $this->countyCodes)) {
                         foreach($this->countyCodes[$addressArray['country_code']] as $key => $val) {
-                            if (strtoupper($addressArray['county']) == strtoupper($val)) {
-                                $addressArray['county_code'] = $key;
+                            if(is_array($val)) {
+                                foreach($val as $county) {
+                                    if (strtoupper($addressArray['county']) == strtoupper($county)) {
+                                        $addressArray['county_code'] = $key;
+                                    }
+                                }
+                            }
+                            else {
+                                if (strtoupper($addressArray['county']) == strtoupper($val)) {
+                                    $addressArray['county_code'] = $key;
+                                }
                             }
                         }
                     }
